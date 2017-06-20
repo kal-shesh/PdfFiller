@@ -31,7 +31,7 @@ namespace PdfFiller
                 {
                     Image image = Image.GetInstance(imageFormat.ImagePath);
                     
-                    image.ScaleToFit(pos.position.Width*3,pos.position.Height);
+                    image.ScaleToFit(pos.position.Width,pos.position.Height);
                     image.SetAbsolutePosition(pos.position.Left,pos.position.Bottom);
                     pdfContentByte.AddImage(image);
                 }
