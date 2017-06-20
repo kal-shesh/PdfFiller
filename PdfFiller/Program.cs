@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -14,13 +15,20 @@ namespace PdfFiller
     {
         static void Main(string[] args)
         {
-            //(@"C:\Users\lavi\Desktop\Hackaton\testpdf\form.pdf"
             PdfReader rdr = new PdfReader(args[0]);
-            var format = JObject.Parse(File.ReadAllText(args[2])).ToObject<Format>();
-            var dict =    format.FormItems.ToDictionary(json => json.Key, json => json.Value);
+            var dict = new Dictionary<string,string>();
+            JTokenToDictionary.Create(JObject.Parse(File.ReadAllText(args[2])),dict);
+            
 
             PdfStamper stamper = new PdfStamper(rdr,new FileStream(args[1],FileMode.Create));
-
+            var format = new Format
+            {
+                Images = new List<PdfImage>
+                {
+                    new PdfImage {ImagePath = ConfigurationManager.AppSettings["Soldier"],FormName = "Soldier Signature" },
+                    new PdfImage {ImagePath = ConfigurationManager.AppSettings["Commander"],FormName = "Commander Signature" }
+                }
+            };
 
             foreach (var imageFormat in format.Images)
             {
